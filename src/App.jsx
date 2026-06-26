@@ -3,82 +3,61 @@ import './App.css'
 function App() {
   return (
     <>
-      <header>
-        <h1>nike shop</h1>
-        <h2>добро пожаловать в интернет магазин nike...</h2>
-        <h3>
-          обувь Nike известна своим качеством...
-        </h3>
+      
+      <header className="header">
+        <div className="logo">NIKE SHOP</div>
+
+        <nav className="nav">
+          <a href="#">Главная</a>
+          <a href="#">Каталог</a>
+          <a href="#">О нас</a>
+          <a href="#">Контакты</a>
+        </nav>
       </header>
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Модель кроссовок</th>
-            <th>Тип</th>
-            <th>Особенность</th>
-            <th>Цена ($)</th>
-          </tr>
-        </thead>
+      <section className="hero">
+        <h1>Найди свою идеальную пару 👟</h1>
+        <p>Лучшие кроссовки Nike по доступным ценам</p>
+        <button>Смотреть каталог</button>
+      </section>
 
-        <tbody>
-          <tr>
-            <td>Nike Air Force 1</td>
-            <td>Повседневные</td>
-            <td>Классический дизайн, подходит под любой стиль</td>
-            <td>115$</td>
-          </tr>
+    
+      <section className="products">
+        <h2>Популярные модели</h2>
 
-          <tr>
-            <td>Nike Air Jordan 1</td>
-            <td>Баскетбольные</td>
-            <td>Легендарная модель, связанная с Майклом Джорданом</td>
-            <td>140$</td>
-          </tr>
+        <div className="grid">
 
-          <tr>
-            <td>Nike Air Max 90</td>
-            <td>Спортивные</td>
-            <td>Комфортная амортизация Air</td>
-            <td>130$</td>
-          </tr>
+          <div className="card">
+            <h3>Nike Air Force 1</h3>
+            <p>Классика на каждый день</p>
+            <span>115$</span>
+          </div>
 
-          <tr>
-            <td>Nike Air Max 97</td>
-            <td>Повседневные</td>
-            <td>Футуристичный дизайн</td>
-            <td>180$</td>
-          </tr>
+          <div className="card">
+            <h3>Nike Air Jordan 1</h3>
+            <p>Легендарные баскетбольные</p>
+            <span>140$</span>
+          </div>
 
-          <tr>
-            <td>Nike Dunk Low</td>
-            <td>Повседневные</td>
-            <td>Streetwear стиль</td>
-            <td>125$</td>
-          </tr>
+          <div className="card">
+            <h3>Nike Air Max 90</h3>
+            <p>Комфорт и стиль</p>
+            <span>130$</span>
+          </div>
 
-          <tr>
-            <td>Nike Pegasus 41</td>
-            <td>Беговые</td>
-            <td>Лёгкие для бега</td>
-            <td>140$</td>
-          </tr>
+          <div className="card">
+            <h3>Nike Dunk Low</h3>
+            <p>Streetwear стиль</p>
+            <span>125$</span>
+          </div>
 
-          <tr>
-            <td>Nike Vomero 18</td>
-            <td>Беговые</td>
-            <td>Мягкая амортизация</td>
-            <td>160$</td>
-          </tr>
+        </div>
+      </section>
 
-          <tr>
-            <td>Nike Metcon 9</td>
-            <td>Тренировочные</td>
-            <td>Для фитнеса и зала</td>
-            <td>150$</td>
-          </tr>
-        </tbody>
-      </table>
+
+      <footer className="footer">
+        <p>© 2026 Nike Shop. Все права защищены.</p>
+      </footer>
     </>
   )
 }

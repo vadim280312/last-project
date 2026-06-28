@@ -1,5 +1,6 @@
 import './App.css'
 
+
 function App() {
   return (
     <>
@@ -8,7 +9,7 @@ function App() {
         <div className="logo">NIKE SHOP</div>
 
         <nav className="nav">
-          <a href="#">Главная</a>
+          <a href='/adress.jsx'>адрес</a>
           <a href="/review.html">Отзывы</a>
           <a href="#">О нас</a>
           <a href="#">Контакты</a>

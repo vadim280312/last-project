@@ -3,20 +3,36 @@ import { Link } from "react-router-dom";
 import "./adress.css";
 
 export default function Contacts() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
-  const [message, setMessage] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    alert("Сообщение отправлено!");
+    if (!form.name || !form.email || !form.subject || !form.message) {
+      alert("Пожалуйста, заполните все поля");
+      return;
+    }
 
-    setName("");
-    setEmail("");
-    setSubject("");
-    setMessage("");
+    alert("Сообщение успешно отправлено!");
+
+    setForm({
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    });
   };
 
   return (
@@ -29,13 +45,6 @@ export default function Contacts() {
         <p><strong>Адрес:</strong> г. Бишкек, проспект Чуй, 150</p>
         <p><strong>Телефон:</strong> +996 (555) 123-456</p>
         <p><strong>Email:</strong> support@nike-store.kg</p>
-
-        <p><strong>Время работы:</strong></p>
-        <ul>
-          <li>Понедельник – Пятница: 10:00 – 20:00</li>
-          <li>Суббота: 10:00 – 19:00</li>
-          <li>Воскресенье: 11:00 – 18:00</li>
-        </ul>
       </div>
 
       <div className="block">
@@ -44,34 +53,34 @@ export default function Contacts() {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
+            name="name"
             placeholder="Ваше имя"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
+            value={form.name}
+            onChange={handleChange}
           />
 
           <input
             type="email"
+            name="email"
             placeholder="Ваш Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            value={form.email}
+            onChange={handleChange}
           />
 
           <input
             type="text"
+            name="subject"
             placeholder="Тема обращения"
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            required
+            value={form.subject}
+            onChange={handleChange}
           />
 
           <textarea
+            name="message"
             placeholder="Ваше сообщение"
             rows="5"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
+            value={form.message}
+            onChange={handleChange}
           />
 
           <button type="submit">Отправить</button>
@@ -88,9 +97,7 @@ export default function Contacts() {
       <div className="block">
         <h2>Как нас найти?</h2>
         <h3>
-          В «Дордой Плаза» заходите через главный вход, поднимаетесь на 2 этаж и
-          идёте в сторону магазинов одежды и спортивных брендов. После чего
-          увидите магазин Nike.
+          В «Дордой Плаза» заходите через главный вход, поднимаетесь на 2 этаж и идёте в сторону магазинов одежды и спортивных брендов.
         </h3>
 
         <iframe

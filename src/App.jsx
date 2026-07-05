@@ -5,6 +5,7 @@ import './App.css';
 import Address from './adress.jsx';
 import Review from './review.jsx';
 import Category from './Category.jsx';
+import FAQ from './FAQ.jsx';
 
 function Home() {
   return (
@@ -21,32 +22,30 @@ function Home() {
       <section className="products">
         <h2>Популярные модели</h2>
 
-<div className="grid">
-  <div className="card">
-    <h3>Nike Air Force 1</h3>
-    <p>Классика на каждый день</p>
-    <span>115$</span>
-  </div>
+        <div className="grid">
+          <div className="card">
+            <h3>Nike Air Force 1</h3>
+            <p>Классика на каждый день</p>
+            <span>115$</span>
+          </div>
 
-  <div className="card">
-    <h3>Nike Air Jordan 1</h3>
-    <p>Легендарные баскетбольные</p>
-    <span>140$</span>
-  </div>
+          <div className="card">
+            <h3>Nike Air Jordan 1</h3>
+            <p>Легендарные баскетбольные</p>
+            <span>140$</span>
+          </div>
 
-  <div className="card">
-    <h3>Nike Air Max 90</h3>
-    <p>Комфорт и стиль</p>
-    <span>130$</span>
-  </div>
+          <div className="card">
+            <h3>Nike Air Max 90</h3>
+            <p>Комфорт и стиль</p>
+            <span>130$</span>
+          </div>
 
-  <div className="card">
-    <h3>Nike Dunk Low</h3>
-    <p>Streetwear стиль</p>
-    <span>125$</span>
-  </div>
-
-
+          <div className="card">
+            <h3>Nike Dunk Low</h3>
+            <p>Streetwear стиль</p>
+            <span>125$</span>
+          </div>
         </div>
       </section>
 
@@ -80,14 +79,10 @@ function Home() {
 }
 
 function App() {
-  const [logoBig, setLogoBig] = useState(false);
-
   return (
     <>
       <header className="header">
-        <div
-    
-        >
+        <div className="logo">
           NIKE SHOP
         </div>
 
@@ -95,6 +90,7 @@ function App() {
           <Link to="/">Главная</Link>
           <Link to="/address">Адрес</Link>
           <Link to="/review">Отзывы</Link>
+          <Link to="/faq">FAQ</Link>
         </nav>
       </header>
 
@@ -103,6 +99,7 @@ function App() {
         <Route path="/category" element={<Category />} />
         <Route path="/address" element={<Address />} />
         <Route path="/review" element={<Review />} />
+        <Route path="/faq" element={<FAQ />} />
       </Routes>
 
       <footer className="footer">

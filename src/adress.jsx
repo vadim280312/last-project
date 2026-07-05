@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./adress.css";
 
-export default function Contacts() {
+  export default function Contacts() {
   const [form, setForm] = useState({
     name: "",
     email: "",

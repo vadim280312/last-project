@@ -1,9 +1,74 @@
 import { useState } from "react";
-import "./category.css";
+import styles from "./category.module.css";
 
 function App() {
   const [selected, setSelected] = useState(null);
+  const [activeTab, setActiveTab] = useState("shop");
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("Все");
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(200);
+  const [sort, setSort] = useState("Без сортировки");
 
+  const [cart, setCart] = useState([]);
+  const [history, setHistory] = useState([]);
+
+  const addToCart = (product) => {
+    const existing = cart.find((i) => i.id === product.id);
+
+    if (existing) {
+      setCart(
+        cart.map((i) =>
+          i.id === product.id
+            ? { ...i, quantity: i.quantity + 1 }
+            : i
+        )
+      );
+    } else {
+      setCart([...cart, { ...product, quantity: 1 }]);
+    }
+  };
+
+  const removeItem = (id) => {
+    setCart(cart.filter((i) => i.id !== id));
+  };
+
+  const changeQuantity = (id, amount) => {
+    setCart(
+      cart
+        .map((i) =>
+          i.id === id
+            ? { ...i, quantity: i.quantity + amount }
+            : i
+        )
+        .filter((i) => i.quantity > 0)
+    );
+  };
+
+  const handleCheckout = () => {
+    if (cart.length === 0) return;
+
+    const purchased = cart.map((i) => ({
+      ...i,
+      purchaseId: Date.now() + i.id,
+      purchaseDate: new Date().toLocaleDateString(),
+    }));
+
+    setHistory([...history, ...purchased]);
+    setCart([]);
+    setActiveTab("history");
+  };
+
+  const totalPrice = cart.reduce(
+    (s, i) => s + i.price * i.quantity,
+    0
+  );
+
+  const totalItems = cart.reduce(
+    (s, i) => s + i.quantity,
+    0
+  );
+  
   const products = [
     {
       id: 1,
@@ -12,9 +77,8 @@ function App() {
       category: "Повседневные",
       description: "Классическая модель на каждый день",
       image:
-        "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/d/ad22b92Nike-CW2288-111_1.jpg?rnd=20200526195200&tr=w-1536",
+        "https://adn-static1.nykaa.com/nykdesignstudio-images/pub/media/catalog/product/a/d/ad22b92Nike-CW2288-111_1.jpg",
     },
-
     {
       id: 2,
       name: "Nike Air Jordan 1",
@@ -22,9 +86,8 @@ function App() {
       category: "Баскетбол",
       description: "Легендарные баскетбольные кроссовки",
       image:
-        "https://static.nike.com/a/images/f_auto,cs_srgb/w_1920,c_limit/89c121fc-3d07-4de0-aef6-bcc9c2764a2c/air-jordan-1-2022-lost-and-found-chicago-the-inspiration-behind-the-design.jpg",
+        "https://static.nike.com/a/images/f_auto,cs_srgb/w_1920,c_limit/89c121fc-3d07-4de0-aef6-bcc9c2764a2c/air-jordan-1.jpg",
     },
-
     {
       id: 3,
       name: "Nike Air Max 90",
@@ -34,27 +97,25 @@ function App() {
       image:
         "https://static.wixstatic.com/media/e13a0d_39df3853bd4f4d1e85d59218629ca750~mv2.webp",
     },
-
     {
       id: 4,
       name: "Nike Air Max 97",
       price: 160,
       category: "Бег",
-      description: "Амортизация и современный стиль",
+      description: "Амортизация и стиль",
       image:
         "https://www.nike.sa/dw/image/v2/BDVB_PRD/on/demandware.static/-/Sites-akeneo-master-catalog/default/dw2120e7bd/nk/b21/2/e/5/b/f/b212e5bf_ec2f_4b0d_b759_37e893003043.jpg?sw=700&sh=700&sm=fit&q=100&strip=false",
     },
-
     {
       id: 5,
       name: "Nike Dunk Low",
       price: 125,
       category: "Streetwear",
-      description: "Популярная модель для города",
+      description: "Популярная городская модель",
       image:
-        "https://static.nike.com/a/images/t_web_pdp_936_v2/f_auto,u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/af53d53d-561f-450a-a483-70a7ceee380f/W+NIKE+DUNK+LOW.png",
+        
+            "https://static.nike.com/a/images/t_web_pdp_936_v2/f_auto,u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/af53d53d-561f-450a-a483-70a7ceee380f/W+NIKE+DUNK+LOW.png",
     },
-
     {
       id: 6,
       name: "Nike Pegasus 41",
@@ -62,10 +123,9 @@ function App() {
       category: "Бег",
       description: "Для ежедневных тренировок",
       image:
-        "https://www.nike.sa/dw/image/v2/BDVB_PRD/on/demandware.static/-/Sites-akeneo-master-catalog/default/dwf3c0ec92/nk/f61/0/5/3/1/8/f6105318_3c83_4836_ab5b_96f2cd95de00.jpg",
+      "https://www.nike.sa/dw/image/v2/BDVB_PRD/on/demandware.static/-/Sites-akeneo-master-catalog/default/dwf3c0ec92/nk/f61/0/5/3/1/8/f6105318_3c83_4836_ab5b_96f2cd95de00.jpg",
     },
-
-    {
+  {
       id: 7,
       name: "Nike Vomero 18",
       price: 170,
@@ -84,7 +144,6 @@ function App() {
       image:
         "https://static.wixstatic.com/media/e13a0d_2b0353846e9247809ecab5139e4cb8eb~mv2.webp",
     },
-    ,
 {
 id:9,
 name:"Nike Air Max 270",
@@ -120,7 +179,6 @@ category:"Бег",
 description:"Для бега и повседневной носки",
 image:"https://static.nike.com/a/images/t_web_pdp_936_v2/f_auto,u_9ddf04c7-2a9a-4d76-add1-d15af8f0263d,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/97f3c140-c5a8-4658-80d7-03f09de5dd68/W+NIKE+REVOLUTION+8.png"
 },
-
 {
 id:13,
 name:"Nike Air Max 95",
@@ -255,7 +313,6 @@ category:"Баскетбол",
 description:"Мощная амортизация",
 image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnfXyMyV971AN3s6tkckOt2mgiSjftL1AqWbcY2DOhlWDs1q8ba_Yi8uAm&s=10"
 },
-
 {
 id:28,
 name:"Nike KD 17",
@@ -284,124 +341,222 @@ image:"https://static.nike.com/a/images/t_web_pdp_936_v2/f_auto,u_9ddf04c7-2a9a-
 }
   ];
 
-  const buyProduct = (product) => {
-    alert(`Покупка: ${product.name}`);
-  };
+let filteredProducts = products.filter((item) => {
+  const matchSearch = item.name
+    .toLowerCase()
+    .includes(search.toLowerCase());
 
-  if (selected) {
-    return (
-      <div className="product">
+  const matchCategory =
+    category === "Все" || item.category === category;
 
-        <button
-          className="back"
-          onClick={() => setSelected(null)}
-        >
-          ← Назад
-        </button>
+const matchPrice =
+  item.price >= minPrice &&
+  item.price <= maxPrice;
 
-        <div className="card opened">
+  return matchSearch && matchCategory && matchPrice;
+});
 
-          <img
-            src={selected.image}
-            alt={selected.name}
-          />
+if (sort === "По названию") {
+  filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+}
 
-          <h3>
-            {selected.name}
-          </h3>
-
-          <div className="price">
-            ${selected.price}
-          </div>
-
-          <p>
-            {selected.category}
-          </p>
-
-          <p>
-            {selected.description}
-          </p>
-
-          <div className="actions">
-
-            <button
-              className="buy"
-              onClick={() =>
-                buyProduct(selected)
-              }
-            >
-              В корзину
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-    );
-  }
+if (sort === "По цене") {
+  filteredProducts.sort((a, b) => a.price - b.price);
+}
 
   return (
     <div className="container">
-
       <h1>👟 Nike Store</h1>
 
-      <div className="grid">
+      <div className="filters">
+  <input
+    type="text"
+    placeholder="Поиск..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+  />
 
-        {products.map((item) => (
-          <div
-            key={item.id}
-            className="card"
-          >
+  <select
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+  >
+    <option value="Все">Все</option>
+    <option value="Повседневные">Повседневные</option>
+    <option value="Бег">Бег</option>
+    <option value="Streetwear">Streetwear</option>
+    <option value="Баскетбол">Баскетбол</option>
+    <option value="Тренировки">Тренировки</option>
+    <option value="Спорт">Спорт</option>
+  </select>
 
-            <img
-              src={item.image}
-              alt={item.name}
-            />
+  <div className="price-filter">
+  <input
+    type="number"
+    placeholder="От"
+    value={minPrice}
+    onChange={(e) => setMinPrice(Number(e.target.value) || 0)}
+  />
 
-            <h3>
-              {item.name}
-            </h3>
+  <span>-</span>
 
-            <div className="price">
-              ${item.price}
-            </div>
+  <input
+    type="number"
+    placeholder="До"
+    value={maxPrice}
+    onChange={(e) => setMaxPrice(Number(e.target.value) || 250)}
+  />
+</div>
 
-            <p>
-              {item.category}
-            </p>
+  <select
+    value={sort}
+    onChange={(e) => setSort(e.target.value)}
+  >
+    <option value="Без сортировки">Без сортировки</option>
+    <option value="По названию">По названию</option>
+    <option value="По цене">По цене</option>
+  </select>
+</div>
 
-            <p>
-              {item.description}
-            </p>
+      {/* ====== MENU ====== */}
+      <div className="nav">
+        <button onClick={() => setActiveTab("shop")}>
+          магазин
+        </button>
 
-            <div className="actions">
+        <button onClick={() => setActiveTab("cart")}>
+          Корзина ({totalItems})
+        </button>
 
-              <button
-                className="open"
-                onClick={() =>
-                  setSelected(item)
-                }
-              >
-                Открыть
-              </button>
-
-              <button
-                className="buy"
-                onClick={() =>
-                  buyProduct(item)
-                }
-              >
-                В корзину
-              </button>
-
-            </div>
-
-          </div>
-        ))}
-
+        <button onClick={() => setActiveTab("history")}>
+          История ({history.length})
+        </button>
       </div>
 
+      {activeTab === "shop" && (
+        <div className="grid">
+        {filteredProducts.map((item) => (
+            <div key={item.id} className="card">
+              <img src={item.image} alt={item.name} />
+
+              <h3>{item.name}</h3>
+              <p>{item.category}</p>
+              <p>{item.description}</p>
+
+              <div className="price">${item.price}</div>
+
+              <div className="actions">
+                <button onClick={() => setSelected(item)}>
+                  Открыть
+                </button>
+
+                <button onClick={() => addToCart(item)}>
+                  В корзину
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      
+      {selected && activeTab === "shop" && (
+        <div className="modal">
+          <div className="modal-card">
+            <button onClick={() => setSelected(null)}>
+              ← Назад
+            </button>
+
+            <img src={selected.image} alt={selected.name} />
+
+            <h2>{selected.name}</h2>
+            <p>{selected.category}</p>
+            <p>{selected.description}</p>
+            <h3>${selected.price}</h3>
+
+            <button onClick={() => addToCart(selected)}>
+              В корзину
+            </button>
+          </div>
+        </div>
+      )}
+
+   
+      {activeTab === "cart" && (
+        <div>
+          <h2>Корзина</h2>
+
+          {cart.length === 0 ? (
+            <p>Корзина пустая</p>
+          ) : (
+            <>
+              {cart.map((item) => (
+                <div key={item.id} className="cart-item">
+                  <h3>{item.name}</h3>
+                  <p>${item.price}</p>
+
+                  <p>
+                    Итого: ${item.price * item.quantity}
+                  </p>
+
+                  <div>
+                    <button
+                      onClick={() =>
+                        changeQuantity(item.id, -1)
+                      }
+                    >
+                      -
+                    </button>
+
+                    <span>{item.quantity}</span>
+
+                    <button
+                      onClick={() =>
+                        changeQuantity(item.id, 1)
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <button onClick={() => removeItem(item.id)}>
+                    Удалить
+                  </button>
+                </div>
+              ))}
+
+              <h3>Общая сумма: ${totalPrice}</h3>
+
+              <button onClick={handleCheckout}>
+                Оформить заказ
+              </button>
+            </>
+          )}
+        </div>
+      )}
+
+     
+      {activeTab === "history" && (
+        <div>
+          <h2>История покупок</h2>
+
+          {history.length === 0 ? (
+            <p>Покупок пока нет</p>
+          ) : (
+            history.map((item) => (
+              <div key={item.purchaseId} className="cart-item">
+                <h3>{item.name}</h3>
+                <p>${item.price}</p>
+                <p>Количество: {item.quantity}</p>
+                <p>Дата: {item.purchaseDate}</p>
+
+                <b>
+                  Итого: ${item.price * item.quantity}
+                </b>
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }

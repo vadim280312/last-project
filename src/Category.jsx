@@ -1,8 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./category.css";
 
-function App() {
+const CART_STORAGE_KEY = "nike-cart";
+
+function getStoredCart() {
+  if (typeof localStorage === "undefined") return [];
+
+  const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+  return savedCart ? JSON.parse(savedCart) : [];
+}
+
+function saveCart(cartItems) {
+  if (typeof localStorage === "undefined") return;
+
+  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+}
+
+function Category() {
   const [selected, setSelected] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [cartItems, setCartItems] = useState(() => getStoredCart());
+
+  useEffect(() => {
+    saveCart(cartItems);
+  }, [cartItems]);
 
   const products = [
     {
@@ -284,9 +305,53 @@ image:"https://static.nike.com/a/images/t_web_pdp_936_v2/f_auto,u_9ddf04c7-2a9a-
 }
   ];
 
-  const buyProduct = (product) => {
-    alert(`Покупка: ${product.name}`);
+  const addToCart = (product) => {
+    setCartItems((prevItems) => {
+      const existing = prevItems.find((item) => item.id === product.id);
+      if (existing) {
+        return prevItems.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...prevItems, { ...product, quantity: 1 }];
+    });
   };
+  
+  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const cartTotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  const clearCart = () => setCartItems([]);
+  const removeFromCart = (id) => {
+    setCartItems((prev) => prev.filter((it) => it.id !== id));
+  };
+  const handleBuy = () => {
+    if (cartItems.length === 0) {
+      window.alert("Корзина пуста");
+      return;
+    }
+    const ok = window.confirm(
+      "Вы уверены, что хотите совершить покупку? Корзина будет очищена."
+    );
+    if (ok) {
+      clearCart();
+      window.alert("Покупка совершена. Спасибо!");
+    }
+  };
+
+  const filteredProducts = products.filter((item) => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return true;
+
+    return (
+      item.name.toLowerCase().includes(term) ||
+      item.category.toLowerCase().includes(term) ||
+      item.description.toLowerCase().includes(term)
+    );
+  });
 
   if (selected) {
     return (
@@ -326,9 +391,7 @@ image:"https://static.nike.com/a/images/t_web_pdp_936_v2/f_auto,u_9ddf04c7-2a9a-
 
             <button
               className="buy"
-              onClick={() =>
-                buyProduct(selected)
-              }
+              onClick={() => addToCart(selected)}
             >
               В корзину
             </button>
@@ -346,9 +409,73 @@ image:"https://static.nike.com/a/images/t_web_pdp_936_v2/f_auto,u_9ddf04c7-2a9a-
 
       <h1>👟 Nike Store</h1>
 
+      <div className="top-row">
+        <div className="search-row">
+          <input
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Поиск по названию, категории или описанию"
+          />
+          {searchTerm && (
+            <button
+              type="button"
+              className="clear-search"
+              onClick={() => setSearchTerm("")}
+            >
+              Очистить
+            </button>
+          )}
+        </div>
+
+        <div className="cart-bin">
+          <div className="cart-header">
+            <span>Корзина</span>
+            <span className="cart-badge">{cartCount}</span>
+          </div>
+          {cartItems.length === 0 ? (
+            <p className="cart-empty">Корзина пуста</p>
+          ) : (
+            <>
+              <ul className="cart-list">
+                {cartItems.map((item) => (
+                  <li key={item.id} className="cart-item">
+                    <div className="cart-item-info">
+                      <strong>{item.name}</strong>
+                      <div className="cart-item-category">{item.category}</div>
+                    </div>
+                    <div className="cart-item-actions">
+                      <span>x{item.quantity}</span>
+                      <span>${(item.price * item.quantity)}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="cart-summary">
+                <span>Итого</span>
+                <span>${cartTotal.toFixed(2)}</span>
+              </div>
+                <button
+                  type="button"
+                  className="cart-buy"
+                  onClick={handleBuy}
+                >
+                  Купить
+                </button>
+                <button
+                  type="button"
+                  className="cart-clear"
+                  onClick={clearCart}
+                >
+                  Очистить корзину
+                </button>
+            </>
+          )}
+        </div>
+      </div>
+
       <div className="grid">
 
-        {products.map((item) => (
+        {filteredProducts.map((item) => (
           <div
             key={item.id}
             className="card"
@@ -388,9 +515,7 @@ image:"https://static.nike.com/a/images/t_web_pdp_936_v2/f_auto,u_9ddf04c7-2a9a-
 
               <button
                 className="buy"
-                onClick={() =>
-                  buyProduct(item)
-                }
+                onClick={() => addToCart(item)}
               >
                 В корзину
               </button>
@@ -402,8 +527,16 @@ image:"https://static.nike.com/a/images/t_web_pdp_936_v2/f_auto,u_9ddf04c7-2a9a-
 
       </div>
 
+      <p className="results-amount">
+        Найдено товаров: {filteredProducts.length}
+      </p>
+
+      {filteredProducts.length === 0 && (
+        <p className="no-results">Ничего не найдено по запросу.</p>
+      )}
+
     </div>
   );
 }
 
-export default App;
+export default Category;

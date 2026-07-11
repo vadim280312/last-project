@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../last-project-category"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "last-project-last-project"
+	}
+}

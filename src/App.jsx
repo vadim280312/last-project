@@ -221,6 +221,14 @@ function App() {
             Главная
           </Link>
 
+
+
+
+          <Link to="/category">
+            Каталог
+          </Link>
+
+
           <Link to="/address">
             Адрес
           </Link>

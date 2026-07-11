@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./category.css";
+import styles from "./category.module.css";
 
 function App() {
   const [selected, setSelected] = useState(null);
@@ -417,6 +417,8 @@ if (sort === "По цене") {
   </select>
 </div>
 
+
+
       <div className="nav">
         <button onClick={() => setActiveTab("shop")}>
           магазин
@@ -432,6 +434,7 @@ if (sort === "По цене") {
       </div>
 
       {activeTab === "shop" && !selected && (
+
         <div className="grid">
         {filteredProducts.map((item) => (
             <div key={item.id} className="card">
@@ -458,6 +461,7 @@ if (sort === "По цене") {
       )}
 
       
+
 {selected && (
   <div 
     className="modalOverlay"
@@ -509,6 +513,28 @@ if (sort === "По цене") {
     </div>
   </div>
 )}
+
+      {selected && activeTab === "shop" && (
+        <div className="modal">
+          <div className="modal-card">
+            <button onClick={() => setSelected(null)}>
+              ← Назад
+            </button>
+
+            <img src={selected.image} alt={selected.name} />
+
+            <h2>{selected.name}</h2>
+            <p>{selected.category}</p>
+            <p>{selected.description}</p>
+            <h3>${selected.price}</h3>
+
+            <button onClick={() => addToCart(selected)}>
+              В корзину
+            </button>
+          </div>
+        </div>
+      )}
+
 
    
       {activeTab === "cart" && (

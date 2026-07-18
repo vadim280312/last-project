@@ -368,18 +368,50 @@ if (sort === "По цене") {
     <div className="container">
       <h1>👟 Nike Store</h1>
 
-      <div className="filters">
-  <input
-    type="text"
-    placeholder="Поиск..."
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-  />
-
-  <select
-    value={category}
-    onChange={(e) => setCategory(e.target.value)}
-  >
+      <div
+  style={{
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: "15px",
+    padding: "20px",
+    margin: "25px auto",
+    background: "#fff",
+    borderRadius: "18px",
+    boxShadow: "0 8px 20px rgba(0,0,0,.08)",
+    maxWidth: "1200px",
+  }}
+>
+<input
+  type="text"
+  placeholder="🔍 Поиск кроссовок..."
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  style={{
+    width: "260px",
+    height: "45px",
+    borderRadius: "12px",
+    border: "2px solid #ddd",
+    padding: "0 15px",
+    fontSize: "15px",
+    outline: "none",
+    background: "#fafafa",
+  }}
+/>
+<select
+  value={category}
+  onChange={(e) => setCategory(e.target.value)}
+  style={{
+    height: "45px",
+    borderRadius: "12px",
+    border: "2px solid #ddd",
+    padding: "0 15px",
+    background: "#fafafa",
+    cursor: "pointer",
+    fontSize: "15px",
+  }}
+>
     <option value="Все">Все</option>
     <option value="Повседневные">Повседневные</option>
     <option value="Бег">Бег</option>
@@ -389,7 +421,13 @@ if (sort === "По цене") {
     <option value="Спорт">Спорт</option>
   </select>
 
-  <div className="price-filter">
+  <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+  }}
+>
   <input
     type="number"
     placeholder="От"
@@ -399,18 +437,35 @@ if (sort === "По цене") {
 
   <span>-</span>
 
-  <input
-    type="number"
-    placeholder="До"
-    value={maxPrice}
-    onChange={(e) => setMaxPrice(Number(e.target.value) || 250)}
-  />
-</div>
+<input
+  type="number"
+  placeholder="До"
+  value={maxPrice}
+  onChange={(e) => setMaxPrice(Number(e.target.value) || 250)}
+  style={{
+    width: "90px",
+    height: "45px",
+    borderRadius: "12px",
+    border: "2px solid #ddd",
+    textAlign: "center",
+    fontSize: "15px",
+    background: "#fafafa",
+  }}
+/> </div>
 
-  <select
-    value={sort}
-    onChange={(e) => setSort(e.target.value)}
-  >
+ <select
+  value={sort}
+  onChange={(e) => setSort(e.target.value)}
+  style={{
+    height: "45px",
+    borderRadius: "12px",
+    border: "2px solid #ddd",
+    padding: "0 15px",
+    background: "#fafafa",
+    cursor: "pointer",
+    fontSize: "15px",
+  }}
+>
     <option value="Без сортировки">Без сортировки</option>
     <option value="По названию">По названию</option>
     <option value="По цене">По цене</option>
@@ -514,26 +569,62 @@ if (sort === "По цене") {
   </div>
 )}
 
-      {selected && activeTab === "shop" && (
-        <div className="modal">
-          <div className="modal-card">
-            <button onClick={() => setSelected(null)}>
-              ← Назад
-            </button>
+     {selected && activeTab === "shop" && (
+  <div
+    className="modalOverlay"
+    onClick={() => setSelected(null)}
+    style={{
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,.6)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999,
+    }}
+  >
+    <div
+      className="modal"
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        background: "#fff",
+        padding: "25px",
+        borderRadius: "12px",
+        width: "380px",
+        textAlign: "center",
+      }}
+    >
+      <img
+        src={selected.image}
+        alt={selected.name}
+        style={{
+          width: "220px",
+          height: "180px",
+          objectFit: "contain",
+        }}
+      />
 
-            <img src={selected.image} alt={selected.name} />
+      <h2>{selected.name}</h2>
 
-            <h2>{selected.name}</h2>
-            <p>{selected.category}</p>
-            <p>{selected.description}</p>
-            <h3>${selected.price}</h3>
+      <p>{selected.category}</p>
 
-            <button onClick={() => addToCart(selected)}>
-              В корзину
-            </button>
-          </div>
-        </div>
-      )}
+      <p>{selected.description}</p>
+
+      <h3>${selected.price}</h3>
+
+      <button onClick={() => addToCart(selected)}>
+        В корзину
+      </button>
+
+      <button
+        onClick={() => setSelected(null)}
+        style={{ marginLeft: "10px" }}
+      >
+        Закрыть
+      </button>
+    </div>
+  </div>
+)}
 
 
    
